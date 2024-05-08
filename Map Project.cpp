@@ -1,56 +1,107 @@
-#include "schedule.h"
+#include "HashSchedule.h"
 
-using namespace std;
 
 int main() {
-    schedule s;
-    s.initSchedule();
-    int w = 1;
-    int c;
-    string sub;
-    string cat;
-    string ins;
-    while (w == 1) {
-        cout << "Class Schedule Menu: " << endl
-            << "Enter 1 to Print Schedule" << endl
-            << "Enter 2 to Search by Subject" << endl
-            << "Enter 3 to Search by Subject and Catalog" << endl
-            << "Enter 4 to Search by Instructor" << endl
-            << "Enter 5 to Quit" << endl << endl
-            << "Your Input: ";
-        cin >> c;
-        cout << endl << endl;
-        if (c == 1) {
-            s.printHeader();
-            s.print();
+    HashSchedule s;
+
+    function<size_t(const std::string&)> hashFunction1 = [](const std::string& key) {
+        size_t hash = 0;
+        for (auto ch : key) {
+            hash += ch;
         }
-        else if (c == 2) {
-            cout << "Enter Subject: ";
-            cin >> sub;
-            cout << endl << endl;
-            s.findSub(sub);
+        return hash;
+    };
+
+    function<size_t(const std::string&)> hashFunction2 = [](const std::string& key) {
+        return key[0] + 27 * key[1] + 729 * key[2];
+    };
+
+    function<size_t(const std::string&)> hashFunction3 = [](const std::string& key) {
+        size_t hash = 0;
+        for (char ch : key) {
+            hash = 37 * hash + ch;
         }
-        else if (c == 3) {
-            cout << "Enter Subject: ";
-            cin >> sub;
-            cout << endl << "Enter Catalog: ";
-            cin >> cat;
-            cout << endl << endl;
-            s.findSubCat(sub, cat);
+        return hash;
+    };
+    
+    function<size_t(const std::string&)> hashFunction4 = [](const std::string& key) {
+        size_t hash = 0;
+        const int p = 31;
+        for (char c : key) {
+            hash = (hash * p) + static_cast<size_t>(c);
         }
-        else if (c == 4) {
-            cout << "Enter Instructor: ";
-            cin >> ins;
-            cout << endl << endl;
-            s.findIns(ins);
+        return hash;
+    };
+
+    function<size_t(const std::string&)> hashFunction5 = [](const std::string& key) {
+        size_t hash = 14695981039346656037U;
+        const size_t prime = 1099511628211U;
+        for (char c : key) {
+            hash ^= static_cast<size_t>(c);
+            hash *= prime;
         }
-        else if (c == 5) {
-            cout << "Exiting...";
-            w = 0;
+        return hash;
+    };
+
+    function<size_t(const std::string&)> hashFunction6 = [](const std::string& key) {
+        size_t hash = key.length();
+        const size_t m = 0x5bd1e995;
+        const int r = 24;
+
+        for (char c : key) {
+            hash = (hash ^ static_cast<size_t>(c)) * m;
+            hash = (hash ^ (hash >> r)) * m;
         }
-        else {
-            cout << "Invalid Choice, Please Enter a Number 1-5." << endl;
-        }
-        cout << endl;
+
+        hash = hash ^ (hash >> 13);
+        hash = hash * 0x5bd1e995;
+        hash = hash ^ (hash >> 15);
+
+        return hash;
+    };
+
+    int d;
+    cout << "Please Select Hash Function." << endl
+        << "Enter 0 for Default" << endl
+        << "Enter 1 for Hash Function 1" << endl
+        << "Enter 2 for Hash Function 2" << endl
+        << "Enter 3 for Hash Function 3" << endl
+        << "Enter 4 for Custom Hash Function 1" << endl
+        << "Enter 5 for Custom Hash Function 2" << endl
+        << "Enter 6 for Custom Hash Function 3" << endl
+        << endl << "Your Selection: ";
+    cin >> d;
+    cout << endl << endl;
+    if (d == 0) {
+        cout << "Using Default Hash Function..." << endl << endl;
     }
+    if (d == 1) {
+        cout << "Using Hash Function 1..." << endl << endl;
+        s.setHashFunction(hashFunction1);
+    }
+    if (d == 2) {
+        cout << "Using Hash Function 2..." << endl << endl;
+        s.setHashFunction(hashFunction2);
+    }
+    if (d == 3) {
+        cout << "Using Hash Function 3..." << endl << endl;
+        s.setHashFunction(hashFunction3);
+    }
+    if (d == 4) {
+        cout << "Using Custom Hash Function 1..." << endl << endl;
+        s.setHashFunction(hashFunction4);
+    }
+    if (d == 5) {
+        cout << "Using Custom Hash Function 2..." << endl << endl;
+        s.setHashFunction(hashFunction5);
+    }
+    if (d == 6) {
+        cout << "Using Custom Hash Function 3..." << endl << endl;
+        s.setHashFunction(hashFunction6);
+    }
+    s.menu();
+    s.display();
+
+
+
 }

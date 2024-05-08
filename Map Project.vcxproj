@@ -127,11 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HashSchedule.cpp" />
+    <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="Map Project.cpp" />
     <ClCompile Include="schedule.cpp" />
     <ClCompile Include="scheduleItem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HashSchedule.h" />
+    <ClInclude Include="HashTable.h" />
     <ClInclude Include="schedule.h" />
     <ClInclude Include="scheduleItem.h" />
   </ItemGroup>
